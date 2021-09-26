@@ -1,0 +1,150 @@
+Function pointers
+
+if we have a function, we normally call it with Function()
+if we instead print Function, with no parantheses, we get a memory address of the function
+functions live in memory too for sets of machine instructions
+if we call a function on the stack, that function references some specific location in memory
+the name of an array is the address of the first element of the array, and the name of a function is its address
+
+whenever we want to get a pointer to a function, we can jsut use its name, which is its address
+when we call a function: go to the address of that function, wherever it is located, and copy over any variables/parameters that are 
+necessary, and then the set of instructions will operate on that data
+
+why we use a pointer to a function: if we store the location, we can use it later
+some piece of data stored in memory, and we need access to it 
+
+pointer to int Function()
+int(*funcPtr)() = Function;
+function that we are pointing to is just the name of the function
+funcPtr is the name of the variable
+data type is a pointer to a function that takes no parameters and returns an itneger
+asterick before varaible name to indicate it is a pointer
+
+just need to indiciate data type of the parameter, don't need a specific variable
+void Function(int value) -> pointer: void (*p)(int) = Function
+we want a pointer to some function, any function, that retuns nothing and accepts an integer
+could be any function, as long as same signature
+could redirct function pointer p to something else
+p = memory address of function with same return type and parameter types (same datatype)
+
+we can treat functions as data and can pass functions to other functions
+
+we can use function pointer just like a function
+funcPtr points to Function, funcPtr() calls Function
+() dereference the pointer (like calling a regular function)
+
+function pointers good when you want to use data elsewhere
+
+don't want to duplicate entire functions to change a little functionality
+have a function pointer that takes in a function which takes care of the little functionality that need to be different
+(2 options for a function that need to be covered? have a function pointer with the same signature of 2 functions that take care of 
+what needs to be covered, and isntead of having 2 separate main functions, only have 1 main function with the different functionality
+handled by the function that was passed in)
+
+function pointer in parameter: return type is taken in by the parameter
+
+SortStuff, want to sort something, but functionality differs if you want to sort in 
+ascending or descending order
+Instead of haivng 2 different sorting functions, with only different functionality being that it is determined if 2 numbers are out 
+of order, depending on if descending or ascending is being used, pass in a function pointer, which has the same signature as an 
+Ascending and Descending function, which both take in two itnegers and determine this different functionality
+(are 2 numbers out of order in descendign or ascending order)
+
+a pointer to a function is still a function
+
+can use function pointers to store functions
+can have an array of function pointers
+when making an array in c++, jsut put a set of brackets at the end of your variable name, and put in how many elements yo uwant to 
+have in that array
+ex: int(*functions[3])(int, int)
+all function pointers need to have the same signature as the array (same return and parameter data types)
+can identify entries/elements with names using enumerations (how????)
+
+the name of a function, Function, and &Function are the same thing
+can pas values in parameter of pointer to call function, ptr(0, 1) calls Function(0, 1)
+don't need to dereference a function pointer to pass in values: (*ptr)(0, 1) is the same thing
+dereferencing multiple times changes nothing (multiple *)
+
+traditional way of assigning a function pointer
+bool(*function)(int, int) = Function;
+using keyword creates an alias for ouself
+an alias is defining a new type; use this type as a stand in for what's assigned
+using Comparison = bool(*)(int, int);
+Comparison is the same as the datatype (it's a function pointer that accepts 2 int and returns a bool)
+
+Array of function pointers good if a user is making an option
+don't need multipel if statements of switch statements, just need a single line: if menu option n, then ArrayOfPoinets[n - 1]
+
+Functor refers to a function object, but it is a class that overloads operator(), which allows us to treat an object as a funcction
+we can call an object with (), which calls that operator
+with a function object and operator parantheses, don't need to dereference with a period or arrow
+Class object
+object(), same as callign a function: object.operator()();, operator() is the name of the function and () if the function paranetheses 
+//???????????? object(), which if the operator overloading and which is the function parantheses
+Prototype (int class): return type operator()(parameter list) {}
+defines the functionality that is used when we pass a functor into a function's parameters (passing in object() passes in functionality
+we defined with the operator() in the class)
+
+Functor: using object as a function as opoosed to calling a function of this object
+don't need to call object.someFunction several times, we can jsut call object() and pass whatever the variable is
+
+function taking an isntance of an object; when passing object, don't need a loose variable and can have object() constructor in paranethes
+temporarily constructed object passed into function
+
+passing a function pointer into the parameters of a function is the same as passign a function object
+overall goal is the same: we're passing a function as some data to another process
+
+Functors and function pointers can do the same thing
+Functor:
+	class Object
+		return type operator()(parameter list)
+
+	function(Object())
+Function pointer:	
+	class Object
+		static return type Function1(parameter list)
+		(static because universal function, every instance has it)
+	
+	function(Function1())
+
+A functor is just a class that happens to have operator overloading ()
+a function doesn't have any state; an object's state is a snapshot of what the object's variables currently store
+the state of an object changes as its data changes
+
+function pointers don't have state, they don't have data that they contain, they just point to something
+
+overlaod parantheses operator so you can call object/function more succinctly
+can still have separate standalone functions in the class you can call with object.Function()
+
+calling object() calls the member function defined for object.operator()()
+
+pass functors with a template; take template that is passed in and call it like a function
+a function object, or a functor, is something that can be called like its a function (with parantheses and parameters), and the template
+takes care of the rest
+treat it like a function, forward some data to it
+could as use #include <functional>, and std::function allows us to store function pointers or function objects in a standardized way
+can use std::function and what it wraps like a function object
+
+std::function is a wrapper class, its sole purpose is to encapsulate something else
+wrapper class: hides what it's storing, gives access to it, but won't reveal what it is
+what is being stored is like a function, it works like one
+if we have a function that takes in an integer and returns a boolean: std::function<bool(int)>
+std::function object internally is storing a tempalate (can reuse with any function that returns anything or accepts any parameters)
+
+can assign std::function object to function
+std::function<return type(parameter type list)> name = Function;
+setting equal to a function pointer, can also set equal to a functor/function object
+can call name(parameter type list), which internally creates a functor (it's overloaded operator())
+
+standard function is a way to group everything into a single format (there are function pointers, functors / function bojects, and
+lambda experessions)
+designed to handle all formats
+
+//function pointers
+//functors
+//are constructors functors?
+//is object() not a constructor? we call it, but what does it do?
+//multiple functors?
+//passing functors
+//how is std::function a functor???
+//differences between function pointers and functors
